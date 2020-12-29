@@ -100,7 +100,7 @@ for name, group in userSubsetGroup:
     else:
         pearsonCorrelationDict[name] = 0
         
-pearsonCorrelationDict.items()
+# pearsonCorrelationDict.items()
 
 Now we will get the top 50 users that are most similar to the input.
 topUsers=pearsonDF.sort_values(by='similarityIndex', ascending=False)[0:50]
