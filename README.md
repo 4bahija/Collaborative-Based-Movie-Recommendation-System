@@ -39,7 +39,10 @@ ii)Based on his rating to movies, find the top X neighbours
 iii)Get the watched movie record of the user for each neighbour.
 iv)Calculate a similarity score using some formula
 v)Recommend the items with the highest score
+
+
 Let's begin by creating an input user to recommend movies to:
+
 userInput=[
     {'title':'Breakfast Club, The','rating':5},
     {'title':'Toy Story','rating':3.5},
