@@ -1,13 +1,13 @@
 # Collaborative-Based-Movie-Recommendation-System
 Recommender systems are the systems which filter information according to a user's choices. It is used in various fields such as books, movies, music, articles etc.
 There are two types of recommender systems:
-i) Content-Bases recommender system- The main paradigm of a content based recommender system is driven by the statement "Show me more of the same of what I have liked before". It figures out what a user's favourite aspects of an item are and then recommendations on items that share those aspects.
-ii) Collaborative-Based recommender system- Collaborative filtering is based on user's saying " Tell me what is popular among my neighbours, I also might like it." It finds similar group of users and provide recommendation based on similar tastes within that group.
+## Content-Bases recommender system- The main paradigm of a content based recommender system is driven by the statement "Show me more of the same of what I have liked before". It figures out what a user's favourite aspects of an item are and then recommendations on items that share those aspects.
+## Collaborative-Based recommender system- Collaborative filtering is based on user's saying " Tell me what is popular among my neighbours, I also might like it." It finds similar group of users and provide recommendation based on similar tastes within that group.
 
 In this notebook, we will be using Collaborative based filtering algorithm to recommend movies to the user.
 We have taken a MovieLens 20M dataset from kaggle(https://www.kaggle.com/grouplens/movielens-20m-dataset)
 
-We imported the basic libraries that are Numpy, Pandas Matplotlib and sqrt.
+### We imported the basic libraries that are Numpy, Pandas Matplotlib and sqrt.
 
 import numpy as np
 import pandas as pd
@@ -16,7 +16,7 @@ from math import sqrt
 
 Then we named CSV files according to our prefrences and then displayed movies_csv and ratings_csv by movies.head() and ratings.head()
 
-We then extracted the year of the movie and mentioned it in the different column named year.
+###We then extracted the year of the movie and mentioned it in the different column named year.
 
 movies['year']=movies.title.str.extract('(\(\d\d\d\d\))',expand=False)
 movies['year']=movies.year.str.extract('(\d\d\d\d)',expand=False)
@@ -30,7 +30,7 @@ movies.drop(columns=['genres'],inplace=True)
 
 ratings.drop(columns=['timestamp'],inplace=True)
 
-Now, we start to work on our recommender system:
+##Now, we start to work on our recommender system:
 
 The process for creating a User Based recommendation system is as follows:
 
@@ -41,7 +41,7 @@ iv)Calculate a similarity score using some formula
 v)Recommend the items with the highest score
 
 
-Let's begin by creating an input user to recommend movies to:
+##Let's begin by creating an input user to recommend movies to:
 
 userInput=[
     {'title':'Breakfast Club, The','rating':5},
@@ -65,7 +65,7 @@ userSubsetGroup = sorted(userSubsetGroup,  key=lambda x: len(x[1]), reverse=True
 
 
 Next step is we will compare all users to our specified user to find out the one that is more similar.we're going to find out how similar each user is to the input through the Pearson Correlation Coefficient. It is used to measure the strength of a linear association between two variables.
-Why Pearson Correlation?
+### Why Pearson Correlation?
 
 Pearson correlation is invariant to scaling, i.e. multiplying all elements by a nonzero constant or adding any constant to all elements. For example, if you have two vectors X and Y,then, pearson(X, Y) == pearson(X, 2 * Y + 3). This is a pretty important property in recommendation systems because for example two users might rate two series of items totally different in terms of absolute rates, but they would be similar users (i.e. with similar ideas) with similar rates in various scales.
 The values given by the formula vary from r = -1 to r = 1, where 1 forms a direct correlation between the two entities (it means a perfect positive correlation) and -1 forms a perfect negative correlation.
@@ -100,14 +100,15 @@ for name, group in userSubsetGroup:
     else:
         pearsonCorrelationDict[name] = 0
         
-# pearsonCorrelationDict.items()
+pearsonCorrelationDict.items()
 
-Now we will get the top 50 users that are most similar to the input.
+#### Now we will get the top 50 users that are most similar to the input.
+
 topUsers=pearsonDF.sort_values(by='similarityIndex', ascending=False)[0:50]
 topUsers.head()
 
 
-Now, we will recommend movies to the input user.
+#### Now, we will recommend movies to the input user.
 We're going to do this by taking the weighted average of the ratings of the movies using the Pearson Correlation as the weight. But to do this, we first need to get the movies watched by the users in our pearsonDF from the ratings dataframe and then store their correlation in a new column called _similarityIndex". This is achieved below by merging of these two tables.
 
 topUsersRating=topUsers.merge(ratings_df, left_on='userId', right_on='userId', how='inner')
@@ -133,7 +134,7 @@ recomm_df['weightedAverageRecommScore']=tempTopUserRating['sum_weightedRating']/
 recomm_df['movieId']=tempTopUserRating.index
 recomm_df.head()
 
-Now, let us sort it out and see top 10 movies that algorithm recommended.
+#### Now, let us sort it out and see top 10 movies that algorithm recommended.
 
 recomm_df=recomm_df.sort_values(by='weightedAverageRecommScore',ascending=False)
 recomm_df.head(10)
@@ -142,5 +143,5 @@ movies.loc[movies['movieId'].isin(recomm_df.head(10)['movieId'].tolist())]
 
 At last, the dataframe will be displayed containing 10 movies that was recommender to the user.
 
-The challenges that I faced during this project was the selection of data to run this collaborative algorithms because it can be done in various ways.
+# The challenges that I faced during this project was the selection of data to run this collaborative algorithms because it can be done in various ways.
 
